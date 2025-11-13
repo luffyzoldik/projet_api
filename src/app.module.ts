@@ -1,11 +1,20 @@
+// src/app.module.ts
+
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigModule } from '@nestjs/config'; // 👈 Import nécessaire
 import { GameModule } from './game/game.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [GameModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    // Rendre le ConfigModule disponible globalement
+    ConfigModule.forRoot({
+      isGlobal: true, // Ceci rend le ConfigService disponible partout
+    }),
+    AuthModule,
+    GameModule,
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

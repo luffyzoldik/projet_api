@@ -1,27 +1,21 @@
-// src/game/game.service.ts
-
 import { Injectable, OnModuleInit, NotFoundException } from '@nestjs/common';
 import * as fs from 'fs';
-import csv from 'csv-parser'; // Import corrigé (export par défaut)
+import csv from 'csv-parser'; 
 import { resolve } from 'path';
 
-// --- Interface pour la structure des données du CSV ---
 interface Game {
   ID: string;
   Name: string;
-  [key: string]: any; // Permet de gérer les autres colonnes sans les typer toutes
+  [key: string]: any; 
 }
 
 @Injectable()
 export class GameService implements OnModuleInit {
   private games: Game[] = [];
   
-  // Chemin d'accès au fichier CSV (ajustez si nécessaire)
+  
   private readonly CSV_FILE_PATH = resolve(__dirname, '..', '..', 'bgg_dataset.csv');
 
-  /**
-   * 1. CHARGEMENT ASYNCHRONE du CSV au démarrage.
-   */
   async onModuleInit() {
     console.log(`[GameService] Tentative de chargement du CSV : ${this.CSV_FILE_PATH}`);
     
@@ -48,25 +42,15 @@ export class GameService implements OnModuleInit {
         });
     });
   }
-
-  // -------------------------------------------------------------------
-  // --- MÉTHODES CRUD ---
-  // -------------------------------------------------------------------
-
-  /**
-   * LIGNE 1 : GET /games (Tri et Pagination)
-   */
-  findAll(skip: number = 0, take: number = 10): Game[] {
-    // Tri alphabétique sur la colonne 'Name'
+ 
+  findAll(skip: number = 0, take: number = 20001): Game[] {
+  
     const sortedGames = [...this.games].sort((a, b) => a.Name.localeCompare(b.Name));
 
-    // Application de l'offset et limit
     return sortedGames.slice(skip, skip + take);
   }
 
-  /**
-   * LIGNE 2 : GET /games/:id (Recherche)
-   */
+  
   findOne(id: string): Game {
     const game = this.games.find(g => g.ID === id);
     if (!game) {
@@ -75,9 +59,7 @@ export class GameService implements OnModuleInit {
     return game;
   }
 
-  /**
-   * LIGNE 3 : POST /games (Création)
-   */
+
   create(data: any): Game {
     const newId = String(Date.now()); 
     const newGame: Game = { ID: newId, Name: data.Name || 'Nouveau Jeu', ...data };
@@ -85,9 +67,7 @@ export class GameService implements OnModuleInit {
     return newGame;
   }
 
-  /**
-   * LIGNE 4 : PUT /games/:id (Mise à jour)
-   */
+
   update(id: string, updateData: any): Game {
     const index = this.games.findIndex(g => g.ID === id);
     
@@ -100,9 +80,7 @@ export class GameService implements OnModuleInit {
     return this.games[index];
   }
 
-  /**
-   * LIGNE 5 : DELETE /games/:id (Suppression)
-   */
+
   remove(id: string): void {
     const initialLength = this.games.length;
     this.games = this.games.filter(g => g.ID !== id);

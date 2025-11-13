@@ -1,7 +1,7 @@
 // src/game/list-games.controller.ts
 
 import { Controller, Get, Query, HttpStatus, HttpCode } from '@nestjs/common';
-import { GameService } from '../game.service'; // Service pour l'accès au CSV/BDD
+import { GameService } from '../../src/game/game.service'; // Service pour l'accès au CSV/BDD
 
 @Controller('games')
 export class ListGamesController {
